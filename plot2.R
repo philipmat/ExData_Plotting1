@@ -7,33 +7,20 @@
 # first set `options(plot2.run=F)`, which will disable the
 # automatic running of the functions
 
-# reads data from a file, optionally subsetting it
-# Eg: readData('data/power.txt', c('1/2/2007', '2/2/2007'))
-
-readData <- function(fname, date.subset = NA) {
-    if (!file.exists(fname)) {
-        return(NA)
-    }
-
-    power.data <- read.table(fname, header = T, sep=";", na.strings = '?')
-    if (!is.na(date.subset)) {
-        power.data <- power.data[power.data$Date %in% date.subset, ]
-    }
-    # add a column that represents the Date + Time obtained from the two columns: Date and Time
-    power.data$DateTime <- strptime(paste(power.data$Date, power.data$Time), format="%d/%m/%Y %T")
-    return(power.data)
-}
 
 # plot the Global_active_power as a histogram to outFile
 # set outFile to NA to plot to screen instead
 
 plot2 <- function(data, outFile = 'plot2.png') {
+    # setting mfrow to ensure that if you run this after plot4
+    # it doesn't display in a 2x2 grid
+    par(mfrow=c(1,1))
     plot(
         x = data$DateTime,
         y = data$Global_active_power,
         type = "l",
         xlab = '',
-        ylab = 'Global Active Power (kilowatts)',
+        ylab = 'Global Active Power (kilowatts)'
     )
     if (!is.na(outFile)) {
         dev.copy(png, file = outFile)
@@ -41,16 +28,9 @@ plot2 <- function(data, outFile = 'plot2.png') {
     }
 }
 
-if (getOption('plot2.run', default=T)) {
-    dfile <- './data/household_power_consumption.txt'
-    outFile <- 'plot2.png'
-    isTest <- getOption('plot2.test', default=F)
-    if (isTest) {
-        dfile <- './data/short_power.txt' # short_power is a smaller version
-        outFile <- NA  # NA = plot to screen
-    }
+# since the data reading code is common to all functions,
+# I've put it in a file that is called by all 4 plotX.R files
+source('dataRunner.R')
 
-    powdata <- readData(dfile, date.subset = c('1/2/2007', '2/2/2007'))
-    plot2(powdata, outFile = outFile)
-    if (isTest) { print(summary(powdata)) }
-}
+# set `options(plot2.run=T, plot2.test=T)` to run with a smaller test data
+conditionalRun(plot2, optionPrefix = 'plot2')
