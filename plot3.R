@@ -1,4 +1,4 @@
-# Plot 3 - Global Active Power by Date
+# Plot 3 - Energy sub metering by date
 # ASSUMPTION: household_power_consumtion.txt has been downloaded
 #             from the specified URL and it resides in a subfolder
 #             called *data*
