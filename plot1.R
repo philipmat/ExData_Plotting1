@@ -1,4 +1,7 @@
 # Plot 1 - Global active power
+# ASSUMPTION: household_power_consumtion.txt has been downloaded
+#             from the specified URL and it resides in a subfolder
+#             called *data*
 # The script will execute if you simply source('plot1.R')
 # if you want to use it as a module (for example see README.Rmd)
 # first set `options(plot1.run=F)`, which will disable the
@@ -22,7 +25,7 @@ readData <- function(fname, date.subset = NA) {
 # plot the Global_active_power as a histogram to outFile
 # set outFile to NA to plot to screen instead
 
-plotData <- function(data, outFile = 'plot1.png') {
+plot1 <- function(data, outFile = 'plot1.png') {
     hist(
         data$Global_active_power,
         col = 'red',
@@ -46,6 +49,6 @@ if (getOption('plot1.run', default=T)) {
     }
 
     powdata <- readData(dfile, date.subset = c('1/2/2007', '2/2/2007'))
-    plotData(powdata, outFile = outFile)
+    plot1(powdata, outFile = outFile)
     if (isTest) { print(summary(powdata)) }
 }
