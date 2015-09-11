@@ -1,0 +1,154 @@
+## Introduction
+
+This assignment uses data from
+the <a href="http://archive.ics.uci.edu/ml/">UC Irvine Machine
+Learning Repository</a>, a popular repository for machine learning
+datasets. In particular, we will be using the "Individual household
+electric power consumption Data Set" which I have made available on
+the course web site:
+
+
+* <b>Dataset</b>: <a href="https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip">Electric power consumption</a> [20Mb]
+
+* <b>Description</b>: Measurements of electric power consumption in
+one household with a one-minute sampling rate over a period of almost
+4 years. Different electrical quantities and some sub-metering values
+are available.
+
+
+The following descriptions of the 9 variables in the dataset are taken
+from
+the <a href="https://archive.ics.uci.edu/ml/datasets/Individual+household+electric+power+consumption">UCI
+web site</a>:
+
+<ol>
+<li><b>Date</b>: Date in format dd/mm/yyyy </li>
+<li><b>Time</b>: time in format hh:mm:ss </li>
+<li><b>Global_active_power</b>: household global minute-averaged active power (in kilowatt) </li>
+<li><b>Global_reactive_power</b>: household global minute-averaged reactive power (in kilowatt) </li>
+<li><b>Voltage</b>: minute-averaged voltage (in volt) </li>
+<li><b>Global_intensity</b>: household global minute-averaged current intensity (in ampere) </li>
+<li><b>Sub_metering_1</b>: energy sub-metering No. 1 (in watt-hour of active energy). It corresponds to the kitchen, containing mainly a dishwasher, an oven and a microwave (hot plates are not electric but gas powered). </li>
+<li><b>Sub_metering_2</b>: energy sub-metering No. 2 (in watt-hour of active energy). It corresponds to the laundry room, containing a washing-machine, a tumble-drier, a refrigerator and a light. </li>
+<li><b>Sub_metering_3</b>: energy sub-metering No. 3 (in watt-hour of active energy). It corresponds to an electric water-heater and an air-conditioner.</li>
+</ol>
+
+## Loading the data
+
+
+
+
+
+When loading the dataset into R, please consider the following:
+
+* The dataset has 2,075,259 rows and 9 columns. First
+calculate a rough estimate of how much memory the dataset will require
+in memory before reading into R. Make sure your computer has enough
+memory (most modern computers should be fine).
+
+```
+About 140MB
+```
+
+* We will only be using data from the dates 2007-02-01 and
+2007-02-02. One alternative is to read the data from just those dates
+rather than reading in the entire dataset and subsetting to those
+dates.
+
+* You may find it useful to convert the Date and Time variables to
+Date/Time classes in R using the `strptime()` and `as.Date()`
+functions.
+
+* Note that in this dataset missing values are coded as `?`.
+
+
+This is how we read the data:
+
+```
+power.data <- read.table(
+    './data/household_power_consumption.txt',
+    header = T,        # the file has a header
+    sep=";",           # the separator is ;
+    na.strings = '?'   # the NA values are ?
+)
+```
+
+We then add a new column in which we store a datetime value,
+obtained from converting the `$Date` and `$Time` *string* columns
+into *actual datetime* values:
+
+```
+power.data$DateTime <- strptime(paste(power.data$Date, power.data$Time), format="%d/%m/%Y %T")
+```
+
+-----
+
+
+## Plots
+
+The following is constructed using the four plot files from the 
+course work. 
+
+If you want to make this *R Markdown* file work, you will want 
+to download the file mentioned above, unzip it,
+and put it in a `data` subfolder before you `knittr` this *Rmd* file.
+
+Or you could just take a look at the rendered [README.html](README.hhtml) file.
+
+**NOTE:** if you run `knitter` (or `Ctrl-Shift-K` in RStudio) on this *Rmd* file,
+expect to take a some amount of time as it loads that really large file in memory.
+
+### Step 0
+
+Set options to prevent the files from auto-executing (the course required it),
+then `source` each file when it comes to plotting the results.
+
+```{r}
+# none of the plots should auto-execute
+options(plot1.run=F, plot2.run=F, plot3.run=F, plot4.run=F)
+# source the data-reading file
+source('dataRunner.R')
+# data is in:
+dfile <- './data/household_power_consumption.txt'
+# will output to:
+outFile = NA
+
+# only reading this once
+data <- readData(dfile, date.subset = c('1/2/2007', '2/2/2007'))
+```
+
+All the figures you see below are generated live.
+(If you read the README.html, then they are embedded within that file)
+
+### Plot 1
+
+```{r}
+source('plot1.R')
+plot1(data, outFile = outFile)
+```
+
+
+
+### Plot 2
+
+```{r}
+source('plot2.R')
+plot2(data, outFile = outFile)
+```
+
+
+### Plot 3
+
+```{r}
+source('plot3.R')
+plot3(data, outFile = outFile)
+```
+
+
+### Plot 4
+
+```{r}
+source('plot4.R')
+plot4(data, outFile = outFile)
+```
+
